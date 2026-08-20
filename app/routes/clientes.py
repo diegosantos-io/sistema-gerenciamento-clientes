@@ -87,9 +87,17 @@ def atualizar_cliente(cliente_id: int, cliente: Cliente):
     cliente_db.email = cliente.email
     cliente_db.telefone = cliente.telefone
 
-    db.commit()
-    db.refresh(cliente_db)
+    try:
+        db.commit()
+        db.refresh(cliente_db)
+    except IntegrityError:
+        db.rollback()
+        db.close()
 
+        raise HTTPException(
+            status_code=409,
+            detail="este email ja esta cadastrado. Tente novamente"
+        )
     db.close()
 
     return cliente_db

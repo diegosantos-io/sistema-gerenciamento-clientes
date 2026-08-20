@@ -163,3 +163,40 @@ def test_telefone_invalido():
     )
 
     assert response.status_code == 422
+
+
+def test_atualizar_cliente_email_duplicado():
+    cliente_1 = client.post(
+        "/clientes/",
+        json={
+            "nome": "Cliente um",
+            "email": "cliente.um@teste.com",
+            "telefone": "11999999999"
+        }
+    )
+
+    assert cliente_1.status_code == 200
+
+
+    cliente_2 = client.post(
+        "/clientes/",
+        json={
+            "nome": "Cliente Dois",
+            "email": "cliente.dois@teste.com",
+            "telefone": "11999999999" 
+        }
+    )
+    assert cliente_2.status_code == 200
+
+    cliente_2_id = cliente_2.json()["id"]
+
+    response = client.put(
+        f"/clientes/{cliente_2_id}",
+        json={
+            "nome": "Cliente dois Atualizado",
+            "email": "cliente.um@teste.com",
+            "telefone": "11955555656"
+        }
+    )
+
+    assert response.status_code == 409
