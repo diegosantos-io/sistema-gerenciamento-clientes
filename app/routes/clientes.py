@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.exc import IntegrityError
-from app.database.database import SessionLocal
+from app.database.database import get_db
 from app.database import models
 from app.schemas.cliente import Cliente
 
@@ -13,19 +13,15 @@ router =  APIRouter(
 
 
 @router.get("/")
-def listar_clientes():
-    db = SessionLocal()
-
+def listar_clientes(db = Depends(get_db)):
     clientes = db.query(models.Cliente).all()
-
-    db.close()
 
     return clientes
 
 
 @router.post("/")
-def criar_cliente(cliente: Cliente):
-    db = SessionLocal()
+def criar_cliente(cliente: Cliente, db=Depends(get_db)):
+    
 
     novo_cliente = models.Cliente(
         nome = cliente.nome, 
@@ -51,9 +47,7 @@ def criar_cliente(cliente: Cliente):
 
 
 @router.get("/{cliente_id}")
-def buscar_cliente(cliente_id: int):
-    db = SessionLocal()
-    
+def buscar_cliente(cliente_id: int,db = Depends(get_db)):
     cliente_db = db.query(models.Cliente).filter(
         models.Cliente.id == cliente_id
         ).first()
@@ -69,9 +63,7 @@ def buscar_cliente(cliente_id: int):
     return cliente_db
 
 @router.put("/{cliente_id}")
-def atualizar_cliente(cliente_id: int, cliente: Cliente):
-    db = SessionLocal()
-
+def atualizar_cliente(cliente_id: int, cliente: Cliente,db =Depends(get_db)):
     cliente_db = db.query(models.Cliente).filter(
         models.Cliente.id == cliente_id
     ).first()
@@ -104,9 +96,7 @@ def atualizar_cliente(cliente_id: int, cliente: Cliente):
 
 
 @router.delete("/{cliente_id}")
-def deletar_cliente(cliente_id:int):
-    db = SessionLocal()
-
+def deletar_cliente(cliente_id:int,db= Depends(get_db)):
     cliente_db = db.query(models.Cliente) .filter(
         models.Cliente.id == cliente_id
     ).first()
