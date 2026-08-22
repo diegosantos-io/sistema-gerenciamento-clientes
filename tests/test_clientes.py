@@ -200,3 +200,48 @@ def test_atualizar_cliente_email_duplicado():
     )
 
     assert response.status_code == 409
+
+def test_atualizar_cliente_inexistente():
+    response = client.put(
+        "/clientes/999999",
+        json={
+            "nome": "Cliente Atualizado",
+            "email": "cliente.atualizado@teste.com",
+            "telefone": "11999999999"
+
+        }
+    )
+
+    assert response.status_code == 404
+
+
+def test_deletar_cliente_inexistente():
+    response = client.delete("/clientes/999999")
+
+    assert response.status_code == 404
+
+
+def test_telefone_tamanho_invalido():
+    response = client.post(
+        "/clientes/",
+        json={
+            "nome": "Cliente Telefone",
+            "email": "telefone.tamanho@teste.com",
+            "telefone": "119999999"
+        }
+    )
+
+    assert response.status_code == 422
+
+
+def test_nome_vazio():
+    response = client.post(
+        "/clientes/",
+        json={
+            "nome": "",
+            "email": "nome.vazio@teste.com",
+            "telefone": "11999999999"
+        }
+    )
+
+    assert response.status_code == 422
