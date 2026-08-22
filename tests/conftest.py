@@ -9,8 +9,15 @@ from app.database import models
 
 @pytest.fixture(autouse=True)
 def limpar_banco():
+    Base.metadata.create_all(bind =engine)
+
     db = models.Cliente.__table__
+
     with engine.begin() as connection:
         connection.execute(db.delete())
 
-Base.metadata.create_all(bind =engine)
+    yield
+
+    with engine.begin() as connection:
+        connection.execute(db.delete())
+
