@@ -1,14 +1,17 @@
 from sqlalchemy.orm import Session
-from app.schemas.cliente import ClienteCreate
 
+from app.schemas.cliente import ClienteCreate
 from app.database import models
 
 
-def listar_clientes(db:Session):
+def listar_clientes(db:Session) -> list[models.Cliente]:
     return db.query(models.Cliente).all()
 
 
-def criar_cliente(db:Session,cliente:ClienteCreate):
+def criar_cliente(
+    db: Session,
+    cliente: ClienteCreate
+) ->  models.Cliente:
     novo_cliente = models.Cliente(
         nome = cliente.nome,
         email = cliente.email,
@@ -22,7 +25,10 @@ def criar_cliente(db:Session,cliente:ClienteCreate):
     return novo_cliente
 
 
-def buscar_cliente(db:Session,cliente_id: int):
+def buscar_cliente(
+        db: Session,
+        cliente_id: int
+        ) -> models.Cliente | None:
     return db.query(models.Cliente).filter(
         models.Cliente.id == cliente_id
     ).first()
@@ -32,7 +38,7 @@ def atualizar_cliente(
         db: Session,
         cliente_id:int,
         cliente:ClienteCreate
-        ):
+) -> models.Cliente | None:
     
     cliente_db = db.query(models.Cliente).filter(
         models.Cliente.id == cliente_id
@@ -52,7 +58,11 @@ def atualizar_cliente(
 
 
 
-def deletar_cliente(db: Session, cliente_id:int):
+def deletar_cliente(
+        db: Session,
+          cliente_id: int
+) -> models.Cliente | None:
+
     cliente_db = db.query(models.Cliente).filter(
         models.Cliente.id == cliente_id
     ).first()
