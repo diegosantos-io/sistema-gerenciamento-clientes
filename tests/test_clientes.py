@@ -215,7 +215,7 @@ def test_atualizar_cliente_inexistente():
     )
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Cliente não encontrado.Tente novamente"
+    assert response.json()["detail"] == "Cliente não encontrado."
 
 
 def test_deletar_cliente_inexistente():
