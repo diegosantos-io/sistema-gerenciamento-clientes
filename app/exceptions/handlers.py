@@ -29,3 +29,15 @@ def email_duplicado_handler(
             "detail": "Este e-mail já está cadastrado.Tente novamente"
         }
     )
+
+
+def erro_interno_handler(
+        request: Request,
+        exc: Exception
+):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": "Erro interno do servidor"
+        }
+    )

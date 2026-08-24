@@ -7,8 +7,10 @@ from app.exceptions.exceptions import (
 )
 from app.exceptions.handlers import (
     cliente_nao_encontrado_handler,
-    email_duplicado_handler
+    email_duplicado_handler,
+    erro_interno_handler
 )
+
 
 
 app = FastAPI()
@@ -23,9 +25,16 @@ app.add_exception_handler(
     email_duplicado_handler
 )
 
+app.add_exception_handler(
+    Exception,
+    erro_interno_handler
+)
+
 app.include_router(clientes_router)
 
 
 @app.get("/")
 def home():
     return {"teste": "API funcionando!"}
+
+
