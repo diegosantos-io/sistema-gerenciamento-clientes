@@ -109,6 +109,7 @@ def test_buscar_cliente_inexistente():
     response = client.get("/clientes/999999")
 
     assert response.status_code == 404
+    assert response.json()["detail"] == "Cliente não encontrado."
 
 
 def test_email_duplicado():
@@ -125,6 +126,7 @@ def test_email_duplicado():
     response = client.post("/clientes", json=cliente)
 
     assert response.status_code == 409
+    assert response.json()['detail'] == "Este e-mail já está cadastrado.Tente novamente"
 
 
 def test_nome_invalido():
@@ -213,12 +215,14 @@ def test_atualizar_cliente_inexistente():
     )
 
     assert response.status_code == 404
+    assert response.json()["detail"] == "Cliente não encontrado.Tente novamente"
 
 
 def test_deletar_cliente_inexistente():
     response = client.delete("/clientes/999999")
 
     assert response.status_code == 404
+    assert response.json()["detail"] == "Cliente não encontrado."
 
 
 def test_telefone_tamanho_invalido():
