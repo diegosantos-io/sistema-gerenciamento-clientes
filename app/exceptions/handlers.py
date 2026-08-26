@@ -41,3 +41,4 @@ def erro_interno_handler(
             "detail": "Erro interno do servidor"
         }
     )
+
